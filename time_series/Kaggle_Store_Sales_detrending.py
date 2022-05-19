@@ -58,9 +58,15 @@ for store in stores:
 
 cores = 2
 j = 0
+first = models_SARIMAX[0:100]
+second = models_SARIMAX[101:200]
+listOfLists = []
+listOfLists.append(first)
+listOfLists.append(second)
 for i in range(cores):
     Processes = []
-    p = multiprocessing.Process(target=getResultes, args=models_SARIMAX[j:round(i*len(models_SARIMAX)/cores)])
+    #p = multiprocessing.Process(target=getResultes, args=models_SARIMAX[j:round(i*len(models_SARIMAX)/cores)])
+    p = multiprocessing.Process(target=getResultes, args=listOfLists[i])
     j = j + len(models_SARIMAX)/cores
     Processes.append(p)
     p.start()
