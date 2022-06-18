@@ -6,7 +6,9 @@
 
 
 1 - with multiprocessing True \ False
+
 2 - how many samples: int, for example: 5
+
 3. use metadata cache: True \ False
 
 Example
