@@ -1,29 +1,21 @@
-# SARIMAX - From here
 import multiprocessing
-import os
 import pickle
-from pathlib import Path
 import sys
-
 import pandas as pd
 import statsmodels.api as sm
 
+from pathlib import Path
 from utils import timeit
-from config import TRAINED_MODELS_PATH, MODEL_DETAILS_PATH, DATA_FILE_TRAIN, DATA_SETS_PATH, SARIMAX_MODELS_PATH
+from config import TRAINED_MODELS_PATH, DATA_FILE_TRAIN, DATA_SETS_PATH, SARIMAX_MODELS_PATH
 
-
-# from statsmodels.tsa.arima.model import ARIMA
-# import statsmodels.tsa.api as smt
-# register_matplotlib_converters()
-# sns.set_style("darkgrid")
 
 def fit(model):
-    data = model.fit(disp=False)
+    data = model['srima_model'].fit(disp=False)
     counter.value += 1
     current_counter = counter.get()
     model_path = TRAINED_MODELS_PATH / f'model_{current_counter}'
     with open(model_path, 'wb') as f:
-        pickle.dump(data, f)
+        pickle.dump({'train_data': data, 'model_detail_list': model['model_detail_list']}, f)
 
     print(f'finish {current_counter} / {len(first)}')
 
@@ -80,15 +72,11 @@ if __name__ == '__main__':
                 X = single_test.copy()
                 X["dayofyear"] = X.index.dayofyear
                 X["year"] = X.index.year
-                models_SARIMAX.append(
-                    sm.tsa.statespace.SARIMAX(X.sales, trend="c", order=(1, 1, 1), seasonal_order=(1, 0, 1, 7)))
+                models_SARIMAX.append({'srima_model': sm.tsa.statespace.SARIMAX(X.sales, trend="c", order=(1, 1, 1),
+                                                                                seasonal_order=(1, 0, 1, 7)),
+                                       'model_detail_list': (store, family)})
                 model_trained += 1
                 datasets.append(X.sales)
-                ModelDetailsList.append((store, family))
-
-        print('finished to build model for ModelDetailsList')
-        with open(MODEL_DETAILS_PATH, 'wb') as f:
-            pickle.dump(ModelDetailsList, f)
 
         print('finished to build model for data sets')
         with open(DATA_SETS_PATH, 'wb') as f:
@@ -118,9 +106,9 @@ if __name__ == '__main__':
             model_path = TRAINED_MODELS_PATH / f'model_{counter}'
 
             if not Path(model_path).is_file():
-                data = model.fit(disp=False)
+                data = model['srima_model'].fit(disp=False)
                 with open(model_path, 'wb') as f:
-                    pickle.dump(data, f)
+                    pickle.dump({'train_data': data, 'model_detail_list': model['model_detail_list']}, f)
                 counter += 1
                 print(f'finish {counter} / {len(first)}')
 
