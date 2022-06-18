@@ -5,9 +5,9 @@
 3 params:
 
 
-1 - with multiprocessing True \ False
+1. with multiprocessing True \ False
 
-2 - how many samples: int, for example: 5
+2. how many samples: int, for example: 5
 
 3. use metadata cache: True \ False
 
