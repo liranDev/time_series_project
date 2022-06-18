@@ -15,6 +15,13 @@ Example
 
 ![image info](./pics/train.png)
 
+
+after training you should have
+
+![image info](./pics/after_training.png)
+
+README.md
+
 ### Predict
 
 1 param:
